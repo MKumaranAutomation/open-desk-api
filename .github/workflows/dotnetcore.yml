@@ -7,12 +7,6 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        os: [windows-latest]
     steps:
-    - uses: actions/checkout@v2
-    - name: Cake Action
-      uses: ecampidoglio/cake-action@master
-      with:
-        target: CI
+    - name: Build Action
+      run: .\build.ps1 -t CI
