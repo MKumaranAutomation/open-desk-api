@@ -7,3 +7,5 @@ artifacts:
   name: artifacts
 - path: ./tests/Api.Http.IntegrationTests/TestResults
   name: test-results
+- path: ./analysis
+  name: analysis
