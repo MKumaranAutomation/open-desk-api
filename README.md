@@ -21,6 +21,6 @@
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=spicycoder_open-desk-api&metric=sqale_index)](https://sonarcloud.io/dashboard?id=spicycoder_open-desk-api)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=spicycoder_open-desk-api&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=spicycoder_open-desk-api)
 
-> Please look at wiki for more info
+> Please look at [wiki](https://github.com/spicycoder/open-desk-api/wiki) for more info
 
 ---
