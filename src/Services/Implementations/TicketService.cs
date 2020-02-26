@@ -76,10 +76,14 @@
         public async Task<Ticket> Update(string id, string noteId)
         {
             var ticket = await Get(id);
+
+            // TODO: Replace with actual data call
+            ticket = await AddNote(id, new Note(string.Empty) {Id = noteId});
+
             var note = ticket.UpdateNote(noteId);
 
             // TODO: make a Data call
-            return ticket;
+            return note == null ? null : ticket;
         }
 
         /// <summary>

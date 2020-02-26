@@ -36,7 +36,7 @@
         /// <summary>
         /// Gets a value indicating whether `Closed`
         /// </summary>
-        public bool Closed { get; private set; }
+        public bool Closed { get; set; }
 
         /// <summary>
         /// `Close` the note

@@ -92,6 +92,28 @@
         }
 
         /// <summary>
+        /// Update Note Status
+        /// </summary>
+        /// <param name="id">Ticket Id</param>
+        /// <param name="noteId">Note Id</param>
+        /// <returns>Ticket</returns>
+        [HttpPut("update-note")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<Ticket>> UpdateNote([FromQuery] string id, [FromQuery] string noteId)
+        {
+            var ticket = await _ticketService.Update(id, noteId);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(ticket);
+        }
+
+        /// <summary>
         /// Add `Conversation`
         /// </summary>
         /// <param name="id">Ticket id</param>

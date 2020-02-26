@@ -3,6 +3,7 @@
     using Domain;
     using FluentAssertions;
     using Newtonsoft.Json;
+    using System;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
@@ -22,11 +23,13 @@
         private const string AddConversation = "/api/Tickets/add-conversation";
         private const string AddNote = "/api/Tickets/add-note";
         private const string UpdateStatus = "/api/Tickets/update-status";
+        private const string UpdateNote = "/api/Tickets/update-note";
 
         private HttpResponseMessage _response;
         private Conversation _conversation;
         private Note _note;
         private string _id;
+        private string _noteId;
         private Ticket _ticket;
 
         /// <summary>
@@ -35,7 +38,46 @@
         [Given(@"A ticket id")]
         public void GivenATicketId()
         {
-            _id = "random";
+            _id = Guid.NewGuid().ToString();
+        }
+
+        /// <summary>
+        /// When Update Note Status
+        /// </summary>
+        [When(@"Update Note Status")]
+        public async Task WhenUpdateNoteStatus()
+        {
+            _response = await Client.PutAsync($"{UpdateNote}?id={_id}&noteId={_noteId}", null);
+        }
+
+        /// <summary>
+        /// Then Note Status should be Open
+        /// </summary>
+        [Then(@"Note Status should be Open")]
+        public async Task ThenNoteStatusShouldBeFalse()
+        {
+            _response.StatusCode.Should().Be(HttpStatusCode.OK);
+            _ticket = JsonConvert.DeserializeObject<Ticket>(await _response.Content.ReadAsStringAsync());
+            _ticket.Should().NotBeNull();
+
+            var note = _ticket.Notes.LastOrDefault();
+            note.Should().NotBeNull();
+            note?.Closed.Should().Be(false);
+        }
+
+        /// <summary>
+        /// Then Note Status should be Closed
+        /// </summary>
+        [Then(@"Note Status should be Closed")]
+        public async Task ThenNoteStatusShouldBeTrue()
+        {
+            _response.StatusCode.Should().Be(HttpStatusCode.OK);
+            _ticket = JsonConvert.DeserializeObject<Ticket>(await _response.Content.ReadAsStringAsync());
+            _ticket.Should().NotBeNull();
+
+            var note = _ticket.Notes.LastOrDefault();
+            note.Should().NotBeNull();
+            note.Closed.Should().Be(true);
         }
 
         /// <summary>
@@ -68,6 +110,7 @@
         [Given(@"A Note")]
         public void GivenANote()
         {
+            _noteId = Guid.NewGuid().ToString();
             _note = new Note("New note");
         }
 

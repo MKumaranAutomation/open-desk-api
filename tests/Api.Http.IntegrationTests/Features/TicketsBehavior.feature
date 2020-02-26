@@ -39,3 +39,11 @@ Scenario Outline: Update Ticket Status
 	| 2      |
 	| 3      |
 	| 4      |
+
+Scenario: Update Note Status in a Ticket
+	Given A ticket id
+	And A Note
+	When A note is added
+	Then Note Status should be Open
+	When Update Note Status
+	Then Note Status should be Closed
