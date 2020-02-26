@@ -16,10 +16,42 @@
     [Binding]
     public class TicketsBehaviorSteps : BaseSteps
     {
-        private const string CreateTicket = "/api/Tickets/create"; 
+        private const string CreateTicket = "/api/Tickets/create";
+        private const string ReadTicket = "/api/Tickets/read";
         private HttpResponseMessage _response;
         private Conversation _conversation;
+        private string _id;
         private Ticket _ticket;
+
+        /// <summary>
+        /// Given A ticket id
+        /// </summary>
+        [Given(@"A ticket id")]
+        public void GivenATicketId()
+        {
+            _id = "random";
+        }
+
+        /// <summary>
+        /// When Reading ticket by a valid id
+        /// </summary>
+        [When(@"Reading ticket by a valid id")]
+        public async Task WhenReadingTicketByAValidId()
+        {
+            _response = await Client.GetAsync($"{ReadTicket}?id={_id}");
+        }
+
+        /// <summary>
+        /// Then It should return a ticket
+        /// </summary>
+        /// <returns></returns>
+        [Then(@"It should return a ticket")]
+        public async Task ThenItShouldReturnATicket()
+        {
+            _response.StatusCode.Should().Be(HttpStatusCode.OK);
+            _ticket = JsonConvert.DeserializeObject<Ticket>(await _response.Content.ReadAsStringAsync());
+            _ticket.Should().NotBeNull();
+        }
 
         /// <summary>
         /// Given A Conversation
@@ -37,7 +69,6 @@
         /// <summary>
         /// When I create a new Ticket
         /// </summary>
-        /// <returns>The <see cref="Task"/></returns>
         [When(@"I create a new Ticket")]
         public async Task WhenICreateANewTicket()
         {
@@ -49,7 +80,6 @@
         /// <summary>
         /// Then A Ticket should have been created
         /// </summary>
-        /// <returns>The <see cref="Task"/></returns>
         [Then(@"A Ticket should have been created")]
         public async Task ThenATicketShouldHaveBeenCreated()
         {
@@ -61,7 +91,6 @@
         /// <summary>
         /// Then Its status should be Unassigned
         /// </summary>
-        /// <returns>The <see cref="Task"/></returns>
         [Then(@"Its status should be Unassigned")]
         public void ThenItsStatusShouldBeUnassigned()
         {

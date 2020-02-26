@@ -5,5 +5,5 @@ build_script:
 artifacts:
 - path: ./artifacts
   name: artifacts
-- path: ./analysis/index.html
-  name: analysis.html
+- path: ./tests/Api.Http.IntegrationTests/TestResults
+  name: test-results

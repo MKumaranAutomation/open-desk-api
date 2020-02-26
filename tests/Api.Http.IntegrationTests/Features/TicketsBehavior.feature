@@ -10,3 +10,8 @@ Scenario: Verify `Ticket Creation`
 	And Its status should be Unassigned
 	And It should have 1 conversation
 	And It should have 0 notes
+
+Scenario: Read `Ticket by Id`
+	Given A ticket id
+	When Reading ticket by a valid id
+	Then It should return a ticket

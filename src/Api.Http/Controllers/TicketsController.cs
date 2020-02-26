@@ -49,6 +49,27 @@
         }
 
         /// <summary>
+        /// Read a ticket by Id
+        /// </summary>
+        /// <param name="id">Ticket id</param>
+        /// <returns>Ticket</returns>
+        [HttpGet("read")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<Ticket>> Get(string id)
+        {
+            var ticket = await _ticketService.Get(id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(ticket);
+        }
+
+        /// <summary>
         /// Update `Ticket Status`
         /// </summary>
         /// <param name="id">Ticket id</param>
@@ -56,7 +77,7 @@
         /// <returns></returns>
         [HttpPut("update-status")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult<Ticket>> UpdateStatus(string id, TicketStatus status)
         {
@@ -64,7 +85,7 @@
 
             if (ticket == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             return Ok(ticket);
@@ -78,7 +99,7 @@
         /// <returns>Ticket</returns>
         [HttpPost("add-note")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult<Ticket>> AddNote(string id, Note note)
         {
@@ -86,7 +107,7 @@
 
             if (ticket == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             return Ok(ticket);
