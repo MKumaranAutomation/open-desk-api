@@ -64,7 +64,7 @@
         /// <summary>
         /// Gets the `Status`
         /// </summary>
-        public TicketStatus Status { get; private set; }
+        public TicketStatus Status { get; set; }
 
         /// <summary>
         /// Gets the `Conversations`

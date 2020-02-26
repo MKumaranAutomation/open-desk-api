@@ -27,3 +27,15 @@ Scenario: Add Note
 	And A Note
 	When A note is added
 	Then Note is available in the ticket
+
+Scenario Outline: Update Ticket Status
+	Given A ticket id
+	When Ticket status is set to <status>
+	Then Ticket status should be <status>
+	Examples: 
+	| status |
+	| 0      |
+	| 1      |
+	| 2      |
+	| 3      |
+	| 4      |

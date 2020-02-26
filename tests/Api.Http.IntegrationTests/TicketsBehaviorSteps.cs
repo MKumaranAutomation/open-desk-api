@@ -21,6 +21,7 @@
         private const string ReadTicket = "/api/Tickets/read";
         private const string AddConversation = "/api/Tickets/add-conversation";
         private const string AddNote = "/api/Tickets/add-note";
+        private const string UpdateStatus = "/api/Tickets/update-status";
 
         private HttpResponseMessage _response;
         private Conversation _conversation;
@@ -35,6 +36,30 @@
         public void GivenATicketId()
         {
             _id = "random";
+        }
+
+        /// <summary>
+        /// When Ticket status is set to [status]
+        /// </summary>
+        /// <param name="status">Ticket status</param>
+        [When(@"Ticket status is set to (.*)")]
+        public async Task WhenTicketStatusIsSetTo(int status)
+        {
+            _response = await Client.PutAsync($"{UpdateStatus}?id={_id}&status={status}", null);
+        }
+
+        /// <summary>
+        /// Then Ticket status should be [status]
+        /// </summary>
+        /// <param name="status">Ticket status</param>
+        [Then(@"Ticket status should be (.*)")]
+        public async Task ThenTicketStatusShouldBe(int status)
+        {
+            _response.StatusCode.Should().Be(HttpStatusCode.OK);
+            _ticket = JsonConvert.DeserializeObject<Ticket>(await _response.Content.ReadAsStringAsync());
+            _ticket.Should().NotBeNull();
+
+            _ticket.Status.Should().Be((TicketStatus)status);
         }
 
         /// <summary>

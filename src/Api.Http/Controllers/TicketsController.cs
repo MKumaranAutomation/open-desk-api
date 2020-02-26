@@ -79,7 +79,7 @@
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<Ticket>> UpdateStatus(string id, TicketStatus status)
+        public async Task<ActionResult<Ticket>> UpdateStatus([FromQuery] string id, [FromQuery] TicketStatus status)
         {
             var ticket = await _ticketService.Update(id, status);
 
