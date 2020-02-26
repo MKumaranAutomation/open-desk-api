@@ -9,5 +9,4 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Build Action
-      working-directory: .
-      run: build.ps1 -t CI
+      run: ls
