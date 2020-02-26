@@ -2,6 +2,10 @@
 
 Open source support ticketing system
 
+
+[![Build status](https://ci.appveyor.com/api/projects/status/olma9jplhk56psbi?svg=true)](https://ci.appveyor.com/project/spicycoder/open-desk-api)
+
+
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=spicycoder_open-desk-api&metric=alert_status)](https://sonarcloud.io/dashboard?id=spicycoder_open-desk-api)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=spicycoder_open-desk-api&metric=bugs)](https://sonarcloud.io/dashboard?id=spicycoder_open-desk-api)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=spicycoder_open-desk-api&metric=code_smells)](https://sonarcloud.io/dashboard?id=spicycoder_open-desk-api)
