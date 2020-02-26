@@ -20,9 +20,11 @@
         private const string CreateTicket = "/api/Tickets/create";
         private const string ReadTicket = "/api/Tickets/read";
         private const string AddConversation = "/api/Tickets/add-conversation";
+        private const string AddNote = "/api/Tickets/add-note";
 
         private HttpResponseMessage _response;
         private Conversation _conversation;
+        private Note _note;
         private string _id;
         private Ticket _ticket;
 
@@ -34,6 +36,43 @@
         {
             _id = "random";
         }
+
+        /// <summary>
+        /// Given A Note
+        /// </summary>
+        [Given(@"A Note")]
+        public void GivenANote()
+        {
+            _note = new Note("New note");
+        }
+
+        /// <summary>
+        /// When A note is added
+        /// </summary>
+        [When(@"A note is added")]
+        public async Task WhenANoteIsAdded()
+        {
+            var json = JsonConvert.SerializeObject(_note);
+            var content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
+            _response = await Client.PostAsync($"{AddNote}?id={_id}", content);
+        }
+
+        /// <summary>
+        /// Then Note is available in the ticket
+        /// </summary>
+        /// <returns></returns>
+        [Then(@"Note is available in the ticket")]
+        public async Task ThenNoteIsAvailableInTheTicket()
+        {
+            _response.StatusCode.Should().Be(HttpStatusCode.OK);
+            _ticket = JsonConvert.DeserializeObject<Ticket>(await _response.Content.ReadAsStringAsync());
+            _ticket.Should().NotBeNull();
+
+            var note = _ticket.Notes.LastOrDefault();
+            note.Should().NotBeNull();
+            note?.Content.Should().Be(_note.Content);
+        }
+
 
         /// <summary>
         /// When A conversation is added
@@ -48,10 +87,10 @@
         }
 
         /// <summary>
-        /// Then It is available in the ticket
+        /// Then Conversation is available in the ticket
         /// </summary>
         /// <returns></returns>
-        [Then(@"It is available in the ticket")]
+        [Then(@"Conversation is available in the ticket")]
         public async Task ThenItIsAvailableInTheTicket()
         {
             _response.StatusCode.Should().Be(HttpStatusCode.OK);

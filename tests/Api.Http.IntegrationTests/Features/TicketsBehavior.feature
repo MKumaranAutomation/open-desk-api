@@ -20,4 +20,10 @@ Scenario: Add Conversation
 	Given A ticket id
 	And A Conversation
 	When A conversation is added
-	Then It is available in the ticket
+	Then Conversation is available in the ticket
+
+Scenario: Add Note
+	Given A ticket id
+	And A Note
+	When A note is added
+	Then Note is available in the ticket
