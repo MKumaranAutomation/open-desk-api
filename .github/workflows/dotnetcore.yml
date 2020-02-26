@@ -1,0 +1,17 @@
+name: .NET Core
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cake Action
+      uses: ecampidog/cake-action@v1.1.1
+      with:
+        script-path: build.cake
+        target: CI
+        cake-bootstrap: false
