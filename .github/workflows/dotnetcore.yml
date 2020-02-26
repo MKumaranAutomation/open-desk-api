@@ -9,4 +9,5 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Build Action
-      run: build
+      run: echo ${env:PATH}
+      shell: pwsh
