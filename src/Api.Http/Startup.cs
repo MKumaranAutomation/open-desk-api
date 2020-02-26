@@ -6,6 +6,8 @@ namespace Api.Http
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OpenApi.Models;
+    using Newtonsoft.Json.Converters;
+    using Services;
     using System;
     using System.IO;
     using System.Linq;
@@ -37,6 +39,7 @@ namespace Api.Http
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            Services.Bootstrap.Initialize(services, new BootstrapOptions());
 
             var swaggerConfig = Configuration.GetSection("SwaggerConfiguration");
 
@@ -76,18 +79,22 @@ namespace Api.Http
             });
 
             services.AddMvc(options =>
-            {
-                options.Filters.Clear();
-                options.Filters.Add(new ConsumesAttribute(MediaTypeNames.Application.Json));
-                options.Filters.Add(new ProducesAttribute(MediaTypeNames.Application.Json));
-            });
+                {
+                    options.Filters.Clear();
+                    options.Filters.Add(new ConsumesAttribute(MediaTypeNames.Application.Json));
+                    options.Filters.Add(new ProducesAttribute(MediaTypeNames.Application.Json));
+                })
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                });
         }
 
         /// <summary>
         /// The Configure
         /// </summary>
-        /// <param name="app">The app<see cref="IApplicationBuilder"/></param>
-        /// <param name="env">The env<see cref="IWebHostEnvironment"/></param>
+        /// <param name="app">The application builder<see cref="IApplicationBuilder"/></param>
+        /// <param name="env">The environment<see cref="IWebHostEnvironment"/></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseHttpsRedirection();
