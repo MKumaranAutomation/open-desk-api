@@ -5,4 +5,5 @@ build_script:
 artifacts:
 - path: ./artifacts
   name: artifacts
-  type: WebDeployPackage
+- path: ./analysis/index.html
+  name: analysis.html
