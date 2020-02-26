@@ -44,8 +44,7 @@
         /// <returns>The <see cref="Ticket"/></returns>
         public async Task<Ticket> AddConversation(string id, Conversation conversation)
         {
-            // TODO: replace with Data call
-            var ticket = new Ticket();
+            var ticket = await Get(id);
 
             ticket.AddConversation(conversation);
 

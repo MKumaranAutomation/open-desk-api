@@ -3,7 +3,7 @@
 	As a `Consumer`
 	I want to verify if it behaves as per the expectations
 
-Scenario: Verify `Ticket Creation`
+Scenario: Verify Ticket Creation
 	Given A Conversation
 	When I create a new Ticket
 	Then A Ticket should have been created
@@ -11,7 +11,13 @@ Scenario: Verify `Ticket Creation`
 	And It should have 1 conversation
 	And It should have 0 notes
 
-Scenario: Read `Ticket by Id`
+Scenario: Read Ticket by Id
 	Given A ticket id
 	When Reading ticket by a valid id
 	Then It should return a ticket
+
+Scenario: Add Conversation
+	Given A ticket id
+	And A Conversation
+	When A conversation is added
+	Then It is available in the ticket

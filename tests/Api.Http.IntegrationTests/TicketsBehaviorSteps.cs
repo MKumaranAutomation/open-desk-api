@@ -3,6 +3,7 @@
     using Domain;
     using FluentAssertions;
     using Newtonsoft.Json;
+    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Mime;
@@ -18,6 +19,8 @@
     {
         private const string CreateTicket = "/api/Tickets/create";
         private const string ReadTicket = "/api/Tickets/read";
+        private const string AddConversation = "/api/Tickets/add-conversation";
+
         private HttpResponseMessage _response;
         private Conversation _conversation;
         private string _id;
@@ -30,6 +33,35 @@
         public void GivenATicketId()
         {
             _id = "random";
+        }
+
+        /// <summary>
+        /// When A conversation is added
+        /// </summary>
+        /// <returns></returns>
+        [When(@"A conversation is added")]
+        public async Task WhenAConversationIsAdded()
+        {
+            var json = JsonConvert.SerializeObject(_conversation);
+            var content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
+            _response = await Client.PostAsync($"{AddConversation}?id={_id}", content);
+        }
+
+        /// <summary>
+        /// Then It is available in the ticket
+        /// </summary>
+        /// <returns></returns>
+        [Then(@"It is available in the ticket")]
+        public async Task ThenItIsAvailableInTheTicket()
+        {
+            _response.StatusCode.Should().Be(HttpStatusCode.OK);
+            _ticket = JsonConvert.DeserializeObject<Ticket>(await _response.Content.ReadAsStringAsync());
+            _ticket.Should().NotBeNull();
+
+            var conversation = _ticket.Conversations.LastOrDefault();
+            conversation.Should().NotBeNull();
+            conversation?.Title.Should().Be(_conversation.Title);
+            conversation?.Content.Should().Be(_conversation.Content);
         }
 
         /// <summary>

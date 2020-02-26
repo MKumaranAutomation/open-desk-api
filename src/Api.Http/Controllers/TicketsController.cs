@@ -92,6 +92,28 @@
         }
 
         /// <summary>
+        /// Add `Conversation`
+        /// </summary>
+        /// <param name="id">Ticket id</param>
+        /// <param name="conversation">Conversation</param>
+        /// <returns>Ticket</returns>
+        [HttpPost("add-conversation")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<Ticket>> AddConversation([FromQuery] string id, [FromBody] Conversation conversation)
+        {
+            var ticket = await _ticketService.AddConversation(id, conversation);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(ticket);
+        }
+
+        /// <summary>
         /// Add `Note`
         /// </summary>
         /// <param name="id">Ticket id</param>
@@ -101,7 +123,7 @@
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<Ticket>> AddNote(string id, Note note)
+        public async Task<ActionResult<Ticket>> AddNote([FromQuery] string id, [FromBody] Note note)
         {
             var ticket = await _ticketService.AddNote(id, note);
 
