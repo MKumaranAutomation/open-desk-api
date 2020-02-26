@@ -75,10 +75,8 @@
         /// <returns>Ticket</returns>
         public async Task<Ticket> Update(string id, string noteId)
         {
-            var ticket = await Get(id);
-
             // TODO: Replace with actual data call
-            ticket = await AddNote(id, new Note(string.Empty) {Id = noteId});
+            var ticket = await AddNote(id, new Note(string.Empty) {Id = noteId});
 
             var note = ticket.UpdateNote(noteId);
 

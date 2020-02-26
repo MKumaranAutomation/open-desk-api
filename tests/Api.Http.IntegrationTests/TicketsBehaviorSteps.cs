@@ -77,7 +77,7 @@
 
             var note = _ticket.Notes.LastOrDefault();
             note.Should().NotBeNull();
-            note.Closed.Should().Be(true);
+            note?.Closed.Should().Be(true);
         }
 
         /// <summary>
