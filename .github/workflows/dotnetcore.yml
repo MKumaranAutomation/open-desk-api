@@ -9,5 +9,5 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Build Action
-      run: ls
+      run: .\build.ps1 -t CI
       shell: pwsh
