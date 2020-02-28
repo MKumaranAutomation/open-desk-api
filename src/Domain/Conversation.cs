@@ -12,13 +12,14 @@
         /// </summary>
         public Conversation()
         {
+            Id = Guid.NewGuid().ToString();
             Created = DateTime.UtcNow;
         }
 
         /// <summary>
         /// Gets or sets the `Id`
         /// </summary>
-        public string Id { get; private set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets the `Created`

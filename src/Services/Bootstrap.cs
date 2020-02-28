@@ -17,6 +17,14 @@
         public static void Initialize(IServiceCollection services, BootstrapOptions options)
         {
             services.AddTransient<ITicketService, TicketService>();
+
+            // Data Access
+            DataAccess.Bootstrap.Initialize(
+                services,
+                new DataAccess.BootstrapOptions
+                {
+                    ConnectionString = options.ConnectionString
+                });
         }
     }
 }

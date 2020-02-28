@@ -1,15 +1,30 @@
 ﻿namespace Services.Implementations
 {
+    using DataAccess.Contracts;
     using Domain;
     using Services.Contracts;
+    using System;
     using System.Threading.Tasks;
-
 
     /// <summary>
     /// Ticket service
     /// </summary>
     public class TicketService : ITicketService
     {
+        /// <summary>
+        /// Defines the ticket repository
+        /// </summary>
+        private readonly ITicketRepository _ticketRepository;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TicketService"/> class.
+        /// </summary>
+        /// <param name="ticketRepository">The ticke tRepository<see cref="ITicketRepository"/></param>
+        public TicketService(ITicketRepository ticketRepository)
+        {
+            _ticketRepository = ticketRepository;
+        }
+
         /// <summary>
         /// Create a ticket
         /// </summary>
@@ -18,10 +33,11 @@
         public async Task<Ticket> Create(Conversation conversation)
         {
             var ticket = new Ticket();
+
             ticket.AddConversation(conversation);
-            
-            // TODO: make a Data call
-            return await Task.FromResult(ticket);
+
+            var response = await _ticketRepository.Add(ticket);
+            return response;
         }
 
         /// <summary>
@@ -31,9 +47,8 @@
         /// <returns>The <see cref="Ticket"/></returns>
         public async Task<Ticket> Get(string id)
         {
-            // TODO: replace with Data call
-            var ticket = new Ticket();
-            return await Task.FromResult(ticket);
+            var ticket = await _ticketRepository.Read(id);
+            return ticket;
         }
 
         /// <summary>
@@ -76,7 +91,7 @@
         public async Task<Ticket> Update(string id, string noteId)
         {
             // TODO: Replace with actual data call
-            var ticket = await AddNote(id, new Note(string.Empty) {Id = noteId});
+            var ticket = await AddNote(id, new Note(string.Empty) { Id = noteId });
 
             var note = ticket.UpdateNote(noteId);
 

@@ -3,47 +3,8 @@
 	As a `Consumer`
 	I want to verify if it behaves as per the expectations
 
-Scenario: Verify Ticket Creation
-	Given A Conversation
-	When I create a new Ticket
-	Then A Ticket should have been created
-	And Its status should be Unassigned
-	And It should have 1 conversation
-	And It should have 0 notes
-
-Scenario: Read Ticket by Id
-	Given A ticket id
-	When Reading ticket by a valid id
-	Then It should return a ticket
-
-Scenario: Add Conversation
-	Given A ticket id
-	And A Conversation
-	When A conversation is added
-	Then Conversation is available in the ticket
-
-Scenario: Add Note
-	Given A ticket id
-	And A Note
-	When A note is added
-	Then Note is available in the ticket
-
-Scenario Outline: Update Ticket Status
-	Given A ticket id
-	When Ticket status is set to <status>
-	Then Ticket status should be <status>
-	Examples: 
-	| status |
-	| 0      |
-	| 1      |
-	| 2      |
-	| 3      |
-	| 4      |
-
-Scenario: Update Note Status in a Ticket
-	Given A ticket id
-	And A Note
-	When A note is added
-	Then Note Status should be Open
-	When Update Note Status
-	Then Note Status should be Closed
+Scenario: Able to create new ticket
+	Given A Conversation title and content
+	When Create a new ticket
+	And Read the created ticket
+	Then The ticket should have 1 conversation and 0 notes and status should be Unassigned
