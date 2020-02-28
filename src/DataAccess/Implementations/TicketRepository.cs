@@ -55,5 +55,20 @@
             var response = await _db.GetAsync<Ticket>(id, i => i.Index(TicketsIndex));
             return response.IsValid ? response.Source : null;
         }
+
+        /// <summary>
+        /// Update ticket
+        /// </summary>
+        /// <param name="ticket">The ticket<see cref="Ticket"/></param>
+        /// <returns>The <see cref="Task{Ticket}"/></returns>
+        public async Task<Ticket> Update(Ticket ticket)
+        {
+            var response = await _db.UpdateAsync<Ticket>(
+                ticket.Id,
+                i => i.Index(TicketsIndex).Doc(ticket));
+
+            ticket = response.IsValid ? await Read(response.Id) : null;
+            return ticket;
+        }
     }
 }

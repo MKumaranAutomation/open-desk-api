@@ -3,7 +3,6 @@
     using DataAccess.Contracts;
     using Domain;
     using Services.Contracts;
-    using System;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -33,7 +32,6 @@
         public async Task<Ticket> Create(Conversation conversation)
         {
             var ticket = new Ticket();
-
             ticket.AddConversation(conversation);
 
             var response = await _ticketRepository.Add(ticket);
@@ -108,10 +106,9 @@
         public async Task<Ticket> Update(string id, TicketStatus status)
         {
             var ticket = await Get(id);
-
             ticket.UpdateStatus(status);
 
-            // TODO: make a Data call
+            ticket = await _ticketRepository.Update(ticket);
             return ticket;
         }
     }
