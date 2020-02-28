@@ -29,6 +29,14 @@ Scenario Outline: Update Ticket Status
 	| Reopened   |
 	| Blocked    |
 
+Scenario Outline: Update ticket status with invalid id
+	Given A random ticket id
+	When Update Ticket Status to <status>
+	Then Should return NotFound
+	Examples: 
+	| status   |
+	| Assigned |
+
 Scenario: Add conversation
 	Given A Conversation title and content
 	When Create a new ticket
@@ -36,6 +44,11 @@ Scenario: Add conversation
 	And Add a new conversation
 	And Read the created ticket
 	Then Ticket should contain added conversation
+
+Scenario Outline: Add conversation with invalid id
+	Given A random ticket id
+	When Add a new conversation
+	Then Should return NotFound
 
 Scenario: Add note
 	Given A Conversation title and content

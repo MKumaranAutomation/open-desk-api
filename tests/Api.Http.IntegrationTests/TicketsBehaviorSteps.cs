@@ -64,8 +64,11 @@
         [When(@"Read the created ticket")]
         public async Task WhenReadTheCreatedTicket()
         {
+            _response.StatusCode.Should().Be(HttpStatusCode.OK);
             _ticket = JsonConvert.DeserializeObject<Ticket>(await _response.Content.ReadAsStringAsync());
             _response = await Client.GetAsync($"{ReadTicket}?id={_ticket.Id}");
+            
+            _id = _ticket.Id;
             _response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
@@ -112,7 +115,6 @@
         [Then(@"Should return NotFound")]
         public void ThenShouldReturnNotFound()
         {
-
             _response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
@@ -123,7 +125,7 @@
         [When(@"Update Ticket Status to (.*)")]
         public async Task WhenUpdateTicketStatusTo(TicketStatus status)
         {
-            _response = await Client.PutAsync($"{UpdateStatus}?id={_ticket.Id}&status={status}", null);
+            _response = await Client.PutAsync($"{UpdateStatus}?id={_id}&status={status}", null);
         }
 
         /// <summary>
@@ -149,8 +151,7 @@
 
             var json = JsonConvert.SerializeObject(_newConversation);
             var content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
-            _response = await Client.PostAsync($"{AddConversation}?id={_ticket.Id}", content);
-            _response.StatusCode.Should().Be(HttpStatusCode.OK);
+            _response = await Client.PostAsync($"{AddConversation}?id={_id}", content);
         }
 
         /// <summary>

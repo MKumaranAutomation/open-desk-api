@@ -36,6 +36,7 @@ namespace Api.Http
             services.AddControllers();
 
             var connectionString = Configuration.GetConnectionString("ElasticConnect");
+
             Services.Bootstrap.Initialize(
                 services,
                 new BootstrapOptions

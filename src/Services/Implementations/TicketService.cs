@@ -58,6 +58,12 @@
         public async Task<Ticket> AddConversation(string id, Conversation conversation)
         {
             var ticket = await Get(id);
+
+            if (ticket == null)
+            {
+                return null;
+            }
+
             ticket.AddConversation(conversation);
             ticket = await _ticketRepository.Update(ticket);
             return ticket;
@@ -72,6 +78,12 @@
         public async Task<Ticket> AddNote(string id, Note note)
         {
             var ticket = await Get(id);
+
+            if (ticket == null)
+            {
+                return null;
+            }
+
             ticket.AddNote(note);
             ticket = await _ticketRepository.Update(ticket);
             return ticket;
@@ -86,6 +98,12 @@
         public async Task<Ticket> Update(string id, string noteId)
         {
             var ticket = await Get(id);
+
+            if (ticket == null)
+            {
+                return null;
+            }
+
             ticket.UpdateNote(noteId);
             ticket = await _ticketRepository.Update(ticket);
             return ticket;
@@ -100,6 +118,12 @@
         public async Task<Ticket> Update(string id, TicketStatus status)
         {
             var ticket = await Get(id);
+
+            if (ticket == null)
+            {
+                return null;
+            }
+
             ticket.UpdateStatus(status);
 
             ticket = await _ticketRepository.Update(ticket);
