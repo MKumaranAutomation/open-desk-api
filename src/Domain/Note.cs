@@ -13,6 +13,7 @@
         /// <param name="content">The content<see cref="string"/></param>
         public Note(string content)
         {
+            Id = Guid.NewGuid().ToString();
             Created = DateTime.UtcNow;
             Content = content;
             Closed = false;

@@ -58,11 +58,9 @@
         public async Task<Ticket> AddConversation(string id, Conversation conversation)
         {
             var ticket = await Get(id);
-
             ticket.AddConversation(conversation);
-
-            // TODO: make a Data call
-            return await Task.FromResult(ticket);
+            ticket = await _ticketRepository.Update(ticket);
+            return ticket;
         }
 
         /// <summary>
@@ -74,9 +72,8 @@
         public async Task<Ticket> AddNote(string id, Note note)
         {
             var ticket = await Get(id);
-            ticket.Notes.Add(note);
-
-            // TODO: make a Data call
+            ticket.AddNote(note);
+            ticket = await _ticketRepository.Update(ticket);
             return ticket;
         }
 
@@ -88,13 +85,10 @@
         /// <returns>Ticket</returns>
         public async Task<Ticket> Update(string id, string noteId)
         {
-            // TODO: Replace with actual data call
-            var ticket = await AddNote(id, new Note(string.Empty) { Id = noteId });
-
-            var note = ticket.UpdateNote(noteId);
-
-            // TODO: make a Data call
-            return note == null ? null : ticket;
+            var ticket = await Get(id);
+            ticket.UpdateNote(noteId);
+            ticket = await _ticketRepository.Update(ticket);
+            return ticket;
         }
 
         /// <summary>

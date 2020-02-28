@@ -21,9 +21,14 @@
         private const string CreateTicket = "/api/Tickets/create";
         private const string ReadTicket = "/api/Tickets/read";
         private const string UpdateStatus = "/api/Tickets/update-status";
+        private const string AddConversation = "/api/Tickets/add-conversation";
+        private const string AddNote = "/api/Tickets/add-note";
+        private const string UpdateNote = "/api/Tickets/update-note";
 
         private HttpResponseMessage _response;
         private Conversation _conversation;
+        private Conversation _newConversation;
+        private Note _newNote;
         private Ticket _ticket;
 
         private string _id;
@@ -128,6 +133,83 @@
         public void ThenTicketStatusShouldBe(TicketStatus status)
         {
             _ticket.Status.Should().Be(status);
+        }
+
+        /// <summary>
+        /// When Add a new conversation
+        /// </summary>
+        [When(@"Add a new conversation")]
+        public async Task WhenAddANewConversation()
+        {
+            _newConversation = new Conversation
+            {
+                Content = Guid.NewGuid().ToString(),
+                Title = Guid.NewGuid().ToString()
+            };
+
+            var json = JsonConvert.SerializeObject(_newConversation);
+            var content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
+            _response = await Client.PostAsync($"{AddConversation}?id={_ticket.Id}", content);
+            _response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        /// <summary>
+        /// Then Ticket should contain added conversation
+        /// </summary>
+        [Then(@"Ticket should contain added conversation")]
+        public void ThenTicketShouldContainAddedConversation()
+        {
+            _ticket.Conversations.Count.Should().Be(2);
+            _ticket.Conversations
+                .Any(c => c.Title == _newConversation.Title && c.Content == _newConversation.Content)
+                .Should()
+                .BeTrue();
+        }
+
+        /// <summary>
+        /// When Add a new note
+        /// </summary>
+        [When(@"Add a new note")]
+        public async Task WhenAddANewNote()
+        {
+            _newNote = new Note(Guid.NewGuid().ToString());
+
+            var json = JsonConvert.SerializeObject(_newNote);
+            var content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
+            _response = await Client.PostAsync($"{AddNote}?id={_ticket.Id}", content);
+            _response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        /// <summary>
+        /// Then Ticket should contain added note
+        /// </summary>
+        [Then(@"Ticket should contain added note and its status is not closed")]
+        public void ThenTicketShouldContainAddedNote()
+        {
+            _ticket.Notes.Count.Should().Be(1);
+            _ticket.Notes
+                .Any(n => n.Content == _newNote.Content && !n.Closed)
+                .Should()
+                .BeTrue();
+        }
+
+        /// <summary>
+        /// When Set note status to Closed / Open
+        /// </summary>
+        [When(@"Set note status to Closed")]
+        public async Task WhenSetNoteStatusTo()
+        {
+            _response = await Client.PutAsync($"{UpdateNote}?id={_ticket.Id}&noteId={_newNote.Id}", null);
+        }
+
+        /// <summary>
+        /// Then Note status is Closed
+        /// </summary>
+        [Then(@"Note status is Closed")]
+        public void ThenNoteStatusIs()
+        {
+            _ticket.Notes.Count.Should().Be(1);
+            _ticket.Notes.First(n => n.Id == _newNote.Id).Closed.Should().BeTrue();
         }
     }
 }

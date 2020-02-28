@@ -28,3 +28,29 @@ Scenario Outline: Update Ticket Status
 	| Closed     |
 	| Reopened   |
 	| Blocked    |
+
+Scenario: Add conversation
+	Given A Conversation title and content
+	When Create a new ticket
+	And Read the created ticket
+	And Add a new conversation
+	And Read the created ticket
+	Then Ticket should contain added conversation
+
+Scenario: Add note
+	Given A Conversation title and content
+	When Create a new ticket
+	And Read the created ticket
+	And Add a new note
+	And Read the created ticket
+	Then Ticket should contain added note and its status is not closed
+
+Scenario: Flip note status in a ticket
+	Given A Conversation title and content
+	When Create a new ticket
+	And Read the created ticket
+	And Add a new note
+	And Set note status to Closed
+	And Read the created ticket
+	Then Note status is Closed
+	

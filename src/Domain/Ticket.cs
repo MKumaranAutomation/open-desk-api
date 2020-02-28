@@ -75,7 +75,7 @@
         /// <summary>
         /// Gets the `Notes`
         /// </summary>
-        public ICollection<Note> Notes { get; private set; }
+        public ICollection<Note> Notes { get; set; }
 
         /// <summary>
         /// Add a Conversation
