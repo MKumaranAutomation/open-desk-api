@@ -32,6 +32,7 @@
         private Ticket _ticket;
 
         private string _id;
+        private string _noteId;
 
         /// <summary>
         /// Given A Conversation title and content
@@ -174,11 +175,11 @@
         public async Task WhenAddANewNote()
         {
             _newNote = new Note(Guid.NewGuid().ToString());
+            _noteId = _newNote.Id;
 
             var json = JsonConvert.SerializeObject(_newNote);
             var content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
-            _response = await Client.PostAsync($"{AddNote}?id={_ticket.Id}", content);
-            _response.StatusCode.Should().Be(HttpStatusCode.OK);
+            _response = await Client.PostAsync($"{AddNote}?id={_id}", content);
         }
 
         /// <summary>
@@ -200,7 +201,7 @@
         [When(@"Set note status to Closed")]
         public async Task WhenSetNoteStatusTo()
         {
-            _response = await Client.PutAsync($"{UpdateNote}?id={_ticket.Id}&noteId={_newNote.Id}", null);
+            _response = await Client.PutAsync($"{UpdateNote}?id={_id}&noteId={_noteId}", null);
         }
 
         /// <summary>
@@ -211,6 +212,15 @@
         {
             _ticket.Notes.Count.Should().Be(1);
             _ticket.Notes.First(n => n.Id == _newNote.Id).Closed.Should().BeTrue();
+        }
+
+        /// <summary>
+        /// When Update status of random note id
+        /// </summary>
+        [When(@"Update status of random note id")]
+        public void WhenUpdateStatusOfRandomNoteId()
+        {
+            _noteId = Guid.NewGuid().ToString();
         }
     }
 }

@@ -45,7 +45,7 @@ Scenario: Add conversation
 	And Read the created ticket
 	Then Ticket should contain added conversation
 
-Scenario Outline: Add conversation with invalid id
+Scenario: Add conversation with invalid id
 	Given A random ticket id
 	When Add a new conversation
 	Then Should return NotFound
@@ -58,6 +58,11 @@ Scenario: Add note
 	And Read the created ticket
 	Then Ticket should contain added note and its status is not closed
 
+Scenario: Add note with invalid id
+	Given A random ticket id
+	When Add a new note
+	Then Should return NotFound
+
 Scenario: Flip note status in a ticket
 	Given A Conversation title and content
 	When Create a new ticket
@@ -67,3 +72,8 @@ Scenario: Flip note status in a ticket
 	And Read the created ticket
 	Then Note status is Closed
 	
+Scenario: Update note with invalid id
+	Given A random ticket id
+	When Update status of random note id
+	And Set note status to Closed
+	Then Should return NotFound
