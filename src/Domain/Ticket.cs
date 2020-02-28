@@ -45,6 +45,7 @@
         /// </summary>
         public Ticket()
         {
+            Id = Guid.NewGuid().ToString();
             Created = DateTime.UtcNow;
             Status = TicketStatus.Unassigned;
             Conversations = new List<Conversation>();
@@ -69,12 +70,12 @@
         /// <summary>
         /// Gets the `Conversations`
         /// </summary>
-        public ICollection<Conversation> Conversations { get; private set; }
+        public ICollection<Conversation> Conversations { get; set; }
 
         /// <summary>
         /// Gets the `Notes`
         /// </summary>
-        public ICollection<Note> Notes { get; private set; }
+        public ICollection<Note> Notes { get; set; }
 
         /// <summary>
         /// Add a Conversation

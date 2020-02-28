@@ -19,18 +19,9 @@ namespace Api.Http
     public class Startup
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Startup"/> class.
-        /// </summary>
-        /// <param name="configuration">The configuration<see cref="IConfiguration"/></param>
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        /// <summary>
         /// Gets the Configuration
         /// </summary>
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; private set; }
 
         /// <summary>
         /// The ConfigureServices
@@ -38,8 +29,19 @@ namespace Api.Http
         /// <param name="services">The services<see cref="IServiceCollection"/></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            Configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+
             services.AddControllers();
-            Services.Bootstrap.Initialize(services, new BootstrapOptions());
+
+            var connectionString = Configuration.GetConnectionString("ElasticConnect");
+            Services.Bootstrap.Initialize(
+                services,
+                new BootstrapOptions
+                {
+                    ConnectionString = connectionString
+                });
 
             var swaggerConfig = Configuration.GetSection("SwaggerConfiguration");
 

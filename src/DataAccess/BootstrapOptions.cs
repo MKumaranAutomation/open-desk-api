@@ -1,4 +1,4 @@
-﻿namespace Services
+﻿namespace DataAccess
 {
     /// <summary>
     /// Defines the <see cref="BootstrapOptions" />

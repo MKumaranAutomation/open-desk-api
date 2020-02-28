@@ -1,6 +1,8 @@
 ﻿namespace Api.Http.IntegrationTests
 {
     using Microsoft.AspNetCore.Mvc.Testing;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
     using System.Net.Http;
 
     /// <summary>
@@ -19,6 +21,15 @@
         public BaseSteps()
         {
             var factory = new WebApplicationFactory<Startup>();
+            factory.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureServices(services =>
+                    {
+                        services.AddTransient<IConfiguration>(_ =>
+                            new ConfigurationBuilder().AddJsonFile("integrationtestsettings.json").Build());
+                    });
+            });
+
             Client = factory.CreateClient();
         }
     }

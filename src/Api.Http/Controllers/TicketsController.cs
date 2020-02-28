@@ -39,12 +39,6 @@
         public async Task<ActionResult<Ticket>> Create([FromBody] Conversation conversation)
         {
             var ticket = await _ticketService.Create(conversation);
-
-            if (ticket == null)
-            {
-                return BadRequest();
-            }
-
             return Ok(ticket);
         }
 
