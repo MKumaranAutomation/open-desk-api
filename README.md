@@ -3,6 +3,7 @@
 #### Open source support ticketing system
 
 [![Build status](https://ci.appveyor.com/api/projects/status/olma9jplhk56psbi?svg=true)](https://ci.appveyor.com/project/spicycoder/open-desk-api)
+[![Build Status](https://dev.azure.com/Matrixean-SpicyCoder/open-desk/_apis/build/status/open-desk-CI?branchName=master)](https://dev.azure.com/Matrixean-SpicyCoder/open-desk/_build/latest?definitionId=8&branchName=master)
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/edd6205355f44a88b0cffafbd55d197d)](https://www.codacy.com/manual/spicycoder/open-desk-api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=spicycoder/open-desk-api&amp;utm_campaign=Badge_Grade)
 [![Maintainability](https://api.codeclimate.com/v1/badges/8721ddddcd4b46c64b9a/maintainability)](https://codeclimate.com/github/spicycoder/open-desk-api/maintainability)
@@ -25,6 +26,22 @@
 
 ---
 
+# Quick Links
+
+- Deployed API
+
+    https://open-desk-api.azurewebsites.net
+
+- Living Documentation
+
+    https://open-desk-docs.azurewebsites.net/
+
+- Resharper Analysis Report
+
+    https://open-desk-renalysis.azurewebsites.net
+
+---
+
 # Progress - Functional Requirements
 
 - [x] Create `Ticket`
@@ -42,11 +59,11 @@
 # Progress - NFR
 
 - [x] Build scripts using `Cake`
-- [x] Code Coverage using `CodeCov` & `SonarQube`
-- [x] Code Quality using `Resharper CLT`, `SonarQube`, `Codacy` and `CodeClimate`
-- [x] CI using `AppVeyor`
+- [x] Code Coverage using [CodeCov](https://app.netlify.com/teams/spicycoder/sites) & [SonarQube](https://sonarcloud.io/dashboard?id=spicycoder_open-desk-api)
+- [x] Code Quality using `Resharper CLT`, [SonarQube](https://sonarcloud.io/dashboard?id=spicycoder_open-desk-api), [Codacy](https://www.codacy.com/manual/spicycoder/open-desk-api?utm_source=github.com&utm_medium=referral&utm_content=spicycoder/open-desk-api&utm_campaign=Badge_Grade) and [CodeClimate](https://codeclimate.com/github/spicycoder/open-desk-api/maintainability)
+- [x] CI using [AppVeyor](https://ci.appveyor.com/project/spicycoder/open-desk-api)
 - [x] BDD using `SpecFlow`, `InMemory Testing`, Report Generation using `Pickle`, Code Coverage using `Coverlet`
-- [ ] Deploy Resharper Code Analysis reports & Living DOcumentation online
+- [x] Deploy [Resharper Code Analysis report](https://open-desk-renalysis.azurewebsites.net) & [Living Documentation](https://open-desk-docs.azurewebsites.net/) online
 - [ ] Create Docker image on every build (CI)
 
 ---
