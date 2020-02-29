@@ -15,7 +15,7 @@ private readonly static string CoverageFile = $"{TestResultsDirectory}/results.o
 private readonly static string CodeCovToken = "e108d274-1e3e-4aaf-8eb4-1937ba1f12c5";
 private readonly static string ResharperInspectXml = $"{AnalysisDirectory}/inspect.xml";
 private readonly static string ResharperInspectTransform = $"{AnalysisDirectory}/inspect.xsl";
-private readonly static string ResharperInspectHtml = $"{AnalysisDirectory}/inspect.html";
+private readonly static string ResharperInspectHtml = $"{AnalysisDirectory}/index.html";
 private readonly static string[] SonarArguments = new string[]
 {
    "/d:sonar.cs.opencover.reportsPaths=\"**.opencover.xml\""
