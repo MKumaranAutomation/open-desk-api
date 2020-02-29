@@ -24,3 +24,29 @@
 > Please look at [wiki](https://github.com/spicycoder/open-desk-api/wiki) for more info
 
 ---
+
+# Progress - Functional Requirements
+
+- [x] Create `Ticket`
+
+- [x] Add `Conversation`s to a ticket
+
+    > A `Conversation` should have a minimum of a `Title` and `Content`
+
+- [x] Add `Note`s to a ticket
+
+    > A `Note` is additional information that could be added to a ticket
+
+---
+
+# Progress - NFR
+
+- [x] Build scripts using `Cake`
+- [x] Code Coverage using `CodeCov` & `SonarQube`
+- [x] Code Quality using `Resharper CLT`, `SonarQube`, `Codacy` and `CodeClimate`
+- [x] CI using `AppVeyor`
+- [x] BDD using `SpecFlow`, `InMemory Testing`, Report Generation using `Pickle`, Code Coverage using `Coverlet`
+- [ ] Deploy Resharper Code Analysis reports & Living DOcumentation online
+- [ ] Create Docker image on every build (CI)
+
+---
