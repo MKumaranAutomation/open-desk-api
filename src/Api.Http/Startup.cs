@@ -49,6 +49,14 @@ namespace Api.Http
 
             var swaggerConfig = Configuration.GetSection("SwaggerConfiguration");
 
+            services
+                .AddHealthChecksUI()
+                .AddHealthChecks()
+                .AddElasticsearch(
+                    setup => { setup.UseServer(connectionString); },
+                    "ElasticSearch",
+                    HealthStatus.Unhealthy);
+
             services.AddSwaggerGen(swagger =>
             {
                 swagger.SwaggerDoc(
@@ -94,14 +102,6 @@ namespace Api.Http
                 {
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 });
-
-            services
-                .AddHealthChecksUI()
-                .AddHealthChecks()
-                .AddElasticsearch(
-                    setup => { setup.UseServer(connectionString); },
-                    "ElasticSearch",
-                    HealthStatus.Unhealthy);
         }
 
         /// <summary>
@@ -112,35 +112,37 @@ namespace Api.Http
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseHttpsRedirection();
+
+            app
+                .UseHealthChecks(
+                    "/hc",
+                    new HealthCheckOptions
+                    {
+                        Predicate = _ => true,
+                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    });
+
+            app.UseHealthChecksUI(config => { config.UIPath = "/hc-ui"; });
+
             app.UseSwagger();
             var swaggerConfig = Configuration.GetSection("SwaggerConfiguration");
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint($"/swagger/{swaggerConfig["ApiName"]}/swagger.json", $"{swaggerConfig["Title"]} v{swaggerConfig["Version"]}");
+                c.SwaggerEndpoint($"/swagger/{swaggerConfig["ApiName"]}/swagger.json",
+                    $"{swaggerConfig["Title"]} v{swaggerConfig["Version"]}");
                 c.RoutePrefix = string.Empty;
             });
 
             app.UseCors("AllowAll");
+            app.UseRouting();
+            app.UseAuthorization();
+
             app
-                .UseRouting()
                 .UseEndpoints(config =>
                 {
-                    config.MapHealthChecks(
-                        "healthz",
-                        new HealthCheckOptions
-                        {
-                            Predicate = _ => true,
-                            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                        });
-
-                    config.MapHealthChecksUI();
                     config.MapDefaultControllerRoute();
+                    config.MapControllers();
                 });
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
         }
     }
 }
