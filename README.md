@@ -40,6 +40,10 @@
 
     https://open-desk-renalysis.azurewebsites.net
 
+- Health Checks
+
+    https://open-desk-api.azurewebsites.net/healthchecks-ui
+
 ---
 
 # Progress - Functional Requirements
@@ -64,6 +68,8 @@
 - [x] CI using [AppVeyor](https://ci.appveyor.com/project/spicycoder/open-desk-api)
 - [x] BDD using `SpecFlow`, `InMemory Testing`, Report Generation using `Pickle`, Code Coverage using `Coverlet`
 - [x] Deploy [Resharper Code Analysis report](https://open-desk-renalysis.azurewebsites.net) & [Living Documentation](https://open-desk-docs.azurewebsites.net/) online
+- [x] [Health Checks](https://open-desk-api.azurewebsites.net/healthchecks-ui)
+- [ ] MiniProfiler
 - [ ] Create Docker image on every build (CI)
 
 ---
