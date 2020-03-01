@@ -116,13 +116,16 @@ namespace Api.Http
             var swaggerConfig = Configuration.GetSection("SwaggerConfiguration");
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint($"/swagger/{swaggerConfig["ApiName"]}/swagger.json", $"{swaggerConfig["Title"]} v{swaggerConfig["Version"]}");
+                c.SwaggerEndpoint($"/swagger/{swaggerConfig["ApiName"]}/swagger.json",
+                    $"{swaggerConfig["Title"]} v{swaggerConfig["Version"]}");
                 c.RoutePrefix = string.Empty;
             });
 
             app.UseCors("AllowAll");
+            app.UseRouting();
+            app.UseAuthorization();
+
             app
-                .UseRouting()
                 .UseEndpoints(config =>
                 {
                     config.MapHealthChecks(
@@ -135,12 +138,8 @@ namespace Api.Http
 
                     config.MapHealthChecksUI();
                     config.MapDefaultControllerRoute();
+                    config.MapControllers();
                 });
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
         }
     }
 }
