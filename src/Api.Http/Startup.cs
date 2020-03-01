@@ -12,6 +12,9 @@ namespace Api.Http
     using System.IO;
     using System.Linq;
     using System.Net.Mime;
+    using HealthChecks.UI.Client;
+    using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+    using Microsoft.Extensions.Diagnostics.HealthChecks;
 
     /// <summary>
     /// Defines the <see cref="Startup" />
@@ -91,6 +94,14 @@ namespace Api.Http
                 {
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 });
+
+            services
+                .AddHealthChecksUI()
+                .AddHealthChecks()
+                .AddElasticsearch(
+                    setup => { setup.UseServer(connectionString); },
+                    "ElasticSearch",
+                    HealthStatus.Unhealthy);
         }
 
         /// <summary>
@@ -110,8 +121,21 @@ namespace Api.Http
             });
 
             app.UseCors("AllowAll");
-            app.UseRouting();
-            app.UseAuthorization();
+            app
+                .UseRouting()
+                .UseEndpoints(config =>
+                {
+                    config.MapHealthChecks(
+                        "healthz",
+                        new HealthCheckOptions
+                        {
+                            Predicate = _ => true,
+                            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                        });
+
+                    config.MapHealthChecksUI();
+                    config.MapDefaultControllerRoute();
+                });
 
             app.UseEndpoints(endpoints =>
             {
