@@ -6,6 +6,10 @@ namespace Api.Http
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OpenApi.Models;
+    using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Diagnostics.HealthChecks;
+    using HealthChecks.UI.Client;
     using Newtonsoft.Json.Converters;
     using Services;
     using System;
@@ -92,6 +96,24 @@ namespace Api.Http
                 {
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 });
+
+            services
+                .AddHealthChecks()
+                .AddElasticsearch(config =>
+                {
+                    config.UseServer(connectionString);
+                    config.UseCertificateValidationCallback((o, certificate, arg3, arg4) => true);
+                });
+
+            services
+                .AddHealthChecksUI(
+                    "healthchecksdb",
+                    config =>
+                    {
+                        config.AddHealthCheckEndpoint("APIHealthCheck", "/hc");
+                        config.SetEvaluationTimeInSeconds(10);
+                        config.SetMinimumSecondsBetweenFailureNotifications(10);
+                    });
         }
 
         /// <summary>
@@ -118,11 +140,28 @@ namespace Api.Http
             app.UseRouting();
             app.UseStaticFiles();
             app.UseAuthorization();
+
             app
-                .UseEndpoints(config =>
+                .UseEndpoints(endpoints =>
                 {
-                    config.MapControllers();
+                    endpoints.MapControllers();
+
+                    endpoints.MapHealthChecks(
+                        "/hc",
+                        new HealthCheckOptions
+                        {
+                            ResultStatusCodes =
+                            {
+                                [HealthStatus.Healthy] = StatusCodes.Status200OK,
+                                [HealthStatus.Degraded] = StatusCodes.Status500InternalServerError,
+                                [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+                            },
+                            Predicate = _ => true,
+                            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                        });
                 });
+
+            app.UseHealthChecksUI(options => { options.UIPath = "/health"; });
         }
     }
 }
