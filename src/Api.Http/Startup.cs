@@ -107,6 +107,8 @@ namespace Api.Http
             var swaggerConfig = Configuration.GetSection("SwaggerConfiguration");
             app.UseSwaggerUI(c =>
             {
+                c.InjectStylesheet("/Assets/theme-newspaper.css");
+
                 c.SwaggerEndpoint($"/swagger/{swaggerConfig["ApiName"]}/swagger.json",
                     $"{swaggerConfig["Title"]} v{swaggerConfig["Version"]}");
                 c.RoutePrefix = string.Empty;
@@ -114,6 +116,7 @@ namespace Api.Http
 
             app.UseCors("AllowAll");
             app.UseRouting();
+            app.UseStaticFiles();
             app.UseAuthorization();
             app
                 .UseEndpoints(config =>
