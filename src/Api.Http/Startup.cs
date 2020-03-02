@@ -15,6 +15,7 @@ namespace Api.Http
     using HealthChecks.UI.Client;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.Extensions.Diagnostics.HealthChecks;
+    using Microsoft.AspNetCore.Authorization;
 
     /// <summary>
     /// Defines the <see cref="Startup" />
@@ -50,12 +51,21 @@ namespace Api.Http
             var swaggerConfig = Configuration.GetSection("SwaggerConfiguration");
 
             services
-                .AddHealthChecksUI()
                 .AddHealthChecks()
                 .AddElasticsearch(
                     setup => { setup.UseServer(connectionString); },
                     "ElasticSearch",
                     HealthStatus.Unhealthy);
+
+            services
+                .AddHealthChecksUI(
+                    "healthchecksdb",
+                    settings =>
+                    {
+                        settings.AddHealthCheckEndpoint("ElasticSearch", "/hc");
+                        settings.SetEvaluationTimeInSeconds(10);
+                        settings.SetMinimumSecondsBetweenFailureNotifications(60);
+                    });
 
             services.AddSwaggerGen(swagger =>
             {
@@ -97,6 +107,7 @@ namespace Api.Http
                     options.Filters.Clear();
                     options.Filters.Add(new ConsumesAttribute(MediaTypeNames.Application.Json));
                     options.Filters.Add(new ProducesAttribute(MediaTypeNames.Application.Json));
+                    options.EnableEndpointRouting = false;
                 })
                 .AddNewtonsoftJson(options =>
                 {
@@ -113,17 +124,6 @@ namespace Api.Http
         {
             app.UseHttpsRedirection();
 
-            app
-                .UseHealthChecks(
-                    "/hc",
-                    new HealthCheckOptions
-                    {
-                        Predicate = _ => true,
-                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                    });
-
-            app.UseHealthChecksUI(config => { config.UIPath = "/hc-ui"; });
-
             app.UseSwagger();
             var swaggerConfig = Configuration.GetSection("SwaggerConfiguration");
             app.UseSwaggerUI(c =>
@@ -136,13 +136,29 @@ namespace Api.Http
             app.UseCors("AllowAll");
             app.UseRouting();
             app.UseAuthorization();
-
             app
                 .UseEndpoints(config =>
                 {
                     config.MapDefaultControllerRoute();
                     config.MapControllers();
                 });
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints
+                    .MapHealthChecks(
+                    "/hc",
+                    new HealthCheckOptions
+                    {
+                        Predicate = _ => true,
+                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    }).WithMetadata(new AllowAnonymousAttribute());
+            });
+
+            app.UseHealthChecksUI(config =>
+            {
+                config.UIPath = "/hc-ui";
+            });
         }
     }
 }
