@@ -107,6 +107,8 @@ namespace Api.Http
             var swaggerConfig = Configuration.GetSection("SwaggerConfiguration");
             app.UseSwaggerUI(c =>
             {
+                c.IndexStream = () => GetType().Assembly.GetManifestResourceStream("Api.Http.Swagger.index.html");
+
                 c.InjectStylesheet("/Assets/theme-newspaper.css");
 
                 c.SwaggerEndpoint($"/swagger/{swaggerConfig["ApiName"]}/swagger.json",
