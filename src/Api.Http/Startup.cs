@@ -12,6 +12,8 @@ namespace Api.Http
     using System.IO;
     using System.Linq;
     using System.Net.Mime;
+    using HealthChecks.UI.Client;
+    using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
     /// <summary>
     /// Defines the <see cref="Startup" />
@@ -43,6 +45,24 @@ namespace Api.Http
                 {
                     ConnectionString = connectionString
                 });
+
+            services
+                .AddHealthChecks()
+                .AddElasticsearch(setup =>
+                {
+                    setup.UseServer(connectionString);
+                    // setup.UseCertificateValidationCallback((o, certificate, arg3, arg4) => true);
+                });
+
+            services
+                .AddHealthChecksUI(
+                    "healthchecksdb",
+                    settings =>
+                    {
+                        settings.AddHealthCheckEndpoint("HealthChart", "/hc");
+                        settings.SetEvaluationTimeInSeconds(10);
+                        settings.SetMinimumSecondsBetweenFailureNotifications(60);
+                    });
 
             var swaggerConfig = Configuration.GetSection("SwaggerConfiguration");
 
@@ -130,6 +150,20 @@ namespace Api.Http
             app
                 .UseEndpoints(endpoints =>
                 {
+                    endpoints
+                        .MapHealthChecks(
+                        "/hc",
+                        new HealthCheckOptions
+                        {
+                            Predicate = _ => true,
+                            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                        });
+
+                    endpoints.MapHealthChecksUI(options =>
+                    {
+                        options.UIPath = "/hc-ui";
+                    });
+
                     endpoints.MapControllers();
                 });
         }
