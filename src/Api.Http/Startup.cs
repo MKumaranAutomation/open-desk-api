@@ -71,6 +71,11 @@ namespace Api.Http
                     .ForEach(x => { swagger.IncludeXmlComments(x); });
             });
 
+            services.AddMiniProfiler(options =>
+            {
+                options.RouteBasePath = "/profiler";
+            });
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", p =>
@@ -103,11 +108,14 @@ namespace Api.Http
         {
             app.UseHttpsRedirection();
 
+            app.UseMiniProfiler();
             app.UseSwagger();
             var swaggerConfig = Configuration.GetSection("SwaggerConfiguration");
             app.UseSwaggerUI(c =>
             {
-                c.InjectStylesheet("/Assets/theme-newspaper.css");
+                c.IndexStream = () => GetType().Assembly.GetManifestResourceStream("Api.Http.Swagger.index.html");
+
+                c.InjectStylesheet("/Assets/theme-material.css");
 
                 c.SwaggerEndpoint($"/swagger/{swaggerConfig["ApiName"]}/swagger.json",
                     $"{swaggerConfig["Title"]} v{swaggerConfig["Version"]}");

@@ -1,0 +1,93 @@
+﻿<!-- HTML for static distribution bundle build -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>%(DocumentTitle)</title>
+    <link rel="stylesheet" type="text/css" href="./swagger-ui.css">
+    <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <style>
+        html {
+            box-sizing: border-box;
+            overflow: -moz-scrollbars-vertical;
+            overflow-y: scroll;
+        }
+
+        *,
+        *:before,
+        *:after {
+            box-sizing: inherit;
+        }
+
+        body {
+            margin: 0;
+            background: #fafafa;
+        }
+    </style>
+    %(HeadContent)
+</head>
+
+<body>
+    <div id="swagger-ui"></div>
+    <script async="async"
+            id="mini-profiler"
+            src="/profiler/includes.min.js?v=4.1.0+c940f0f28d"
+            data-version="4.1.0+c940f0f28d"
+            data-path="/profiler/"
+            data-current-id="e4c5259e-9679-447c-b1cf-c85f95e0c0dd"
+            data-ids="e4c5259e-9679-447c-b1cf-c85f95e0c0dd"
+            data-position="BottomLeft"
+            data-authorized="true"
+            data-children="true"
+            data-controls="true"
+            data-max-traces="15"
+            data-toggle-shortcut="Alt+P"
+            data-trivial-milliseconds="2.0"
+            data-ignored-duplicate-execute-types="Open,OpenAsync,Close,CloseAsync"></script>
+
+    <!-- Workaround for https://github.com/swagger-api/swagger-editor/issues/1371 -->
+    <script>
+        if (window.navigator.userAgent.indexOf("Edge") > -1) {
+            console.log("Removing native Edge fetch in favor of swagger-ui's polyfill")
+            window.fetch = undefined;
+        }
+    </script>
+
+    <script src="./swagger-ui-bundle.js"></script>
+    <script src="./swagger-ui-standalone-preset.js"></script>
+    <script>
+        window.onload = function () {
+            var configObject = JSON.parse('%(ConfigObject)');
+            var oauthConfigObject = JSON.parse('%(OAuthConfigObject)');
+
+            // If validatorUrl is not explicitly provided, disable the feature by setting to null
+            if (!configObject.hasOwnProperty("validatorUrl"))
+                configObject.validatorUrl = null;
+
+            // If oauth2RedirectUrl isn't specified, use the built-in default
+            if (!configObject.hasOwnProperty("oauth2RedirectUrl"))
+                configObject.oauth2RedirectUrl = window.location.href.replace("index.html", "oauth2-redirect.html").split('#')[0];
+
+            // Apply mandatory parameters
+            configObject.dom_id = "#swagger-ui";
+            configObject.presets = [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset];
+            configObject.layout = "StandaloneLayout";
+
+            // Begin Swagger UI call region
+
+            const ui = SwaggerUIBundle(configObject);
+            const el = document.getElementsByTagName('img')[0];
+            el.src =
+                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAABmJLR0QA/wD/AP+gvaeTAAAP9ElEQVR4nO2deVQUV9rGn1vdNPsOsrQILngUPhUEZHHFDVd0GKMxCsToaOIWo6OMo6MmjjqTxU+MW/w0ahIxY9yTuKDGnUVxHROPSzSI0CI7CjR0d935g4gC3XZVdxXIfPU7h3M8Xfe+7wtP3/vWXQUkJCQkJCQkJCQkJCQkJCQkJCQkJCRaPqS5AxCS3ZTKfAtVwayM9geL3iCkPQBPAA4AdAAqAKgIwR1QeoOyzKkSt2fpw4h/dbMG/hL/FYJkPMnxpwwzB4SMB+DMpy4BSllgN2HxRaS79xWRQuQTT8slozinKyD7kFLEAmAEMHmUZdiFPZ1bXxPAlkm0SEGyKLXQFj/+CwVdDEAhsHktAdZVlVcvjG7bVi2wbaO0OEHSS1R+0NF9IAgW2dV1otO9EdHK567IfurRogRJL8zrDIJjAHyayGUxBR0Z5apMayJ/LUeQC4WqMIbQIwBcm9j1M0rJgCg3r4tN4axJBBnWpVMXazvH5RpNTbRGXW1naWNdQCi+VpeULT9y7165sfpZBQVeGkZzBbWvsE1CkKM7rGTyhh/fJYR0FNOv6IKM6N5tklxusS5+xhSrXgOjGSdXF+RlP8IPu/dWnzj4Y0VlhTri+K1bBvvpU5TKLYtVPxGgt9ixGuHftFIXHuXjUyWmE1EFGdq5c4S1o/3J5JStNt5tWjd6fj71FF29dMUTWv7M/9Dt20/12cgozltJKRYKHZuBFtAItU6La2UFL5cXtZUYj8gMbJ0cVk9LmmOtTwwA6DU4mpxLPWF/4fS594Z26XLHxs5qVVVlVQeGyDSW1paXPAI7fU5ZzBXja3OtrMCU8jqWYccKH80LRGsh/fz8rGwc7cv3ph23UFhaGix3+UImlsycp/Hxa1M9dcH7doHBQaiprsbFsxfo1jUbdL0TE+Uho4aLFWbdN79MU41bT4sR5OgOAA1bhTEEazWCCTI0ICDYxskuuaZKHUoIoyOM7AwjI9F7Lhy3eVW98tIybE/eoJuWNFdmaVVfONWjXMx68x0kJK+GZ4d2QoVqLpQyNCTKWXlVDOOCCDI4ICDc2sbqxLQF79v2HBhNykvLsP+bbzWHv9tvcSjrLGQymcm292zfiet3fsXIpPlChMqZ563jeQ6pB8WmSDfv98TwK4ggcRFh12YuXtC175CB9ew9/PU3uHt54LttXwMAvJRKDBrNr/t5cPce/p60DNO2/Z8QoQpFiYNLiWcgCawR2rCpSZ0M6RKYaGtnk1RZoW7PEEJ7DuzXSNw27f2wfe1GxCW8BQcnR95O7t+5hwvHT+FJzkPsXrQEURPGo3VAZxNDFhTnslKXSABnhDbMW5BlAHMjImSPg7PzkJmL5lsHBneDTC6v65ZYVoeUL7aBZVlUq6vh4uZqkhipB34AAIyZNBFDx4xC+k9nsXPhYgyYPg3dYgbztic0hGWj8ToIcikoaLayleeQtd9+aW2haDzRemzv9+g3dBBa+/maHJSmpgbPysoRl/gWAMDaxhojx49B96hwfJAwFa0DA+HaWmmyfWEgXcWwylsQCwvZwrkrFtcT41n5U+z7KgWEYSBjZGaJAQAWCkWdGC+j9PXBH+PHI21nSpMn+YZQQJTBIS9BRnbs6EZBHfw7d6r3+e4vv8a4KQmwtbMTNDh9dOsRgmM/HhXdjzEI4CGGXbNX2TQ1NWjl6dEkYgCAwsoShAixOGgmFPZimOX92js6LCT/420bWrXvZLzFVlVUYvMnybhw4hSePX1mUoCvK9Z2tmgXFprf/70ps4YHhOwhhFAh7PLOIVqNZuXaj/654pNtG2xfNSUCAJs/Sca5Y8cxelgEHO2sTQ7ydaTsaSX2H8n0sLK12+2ywDv1fHHen3q5eD80164pA0Pyh/DQPfaOjkNnLf6zdWD3YDSc8njO2F6DERsTijdG9jQvymZi4fIdIAzBykUJep/vPngeB49fxoIfDwJAOSXMhCgXzx/M8WnKwJDuz8waM6RrYMI/kpYuqKyo8md1WgtDhVtyyyAMAXnFV9bJwQaVL7piB0LZ/emFqimRbl47TPVp6kidHr3x8w4AdY7Ti1VDQenhlwst6zOgXqVde8/A0sqgdnW0UbojNMgfAHDnXi5u3s42WocQguGDwqCwqP2VVPklSM+6Zfw3aUBlZQ0mvtEPAAy2jFcgB6Fb04tVTyJdvI7wdg4B10MIaG9jWY2RMYgbHsXLbscOSnTswH8Q6OXhzNsXAPzrwDnedRogA6W70p7khEa18rnHt7Jg74+Ukh5C2XpdWLh8B/664itTqjoSmWyDKRXNEoRSSjILH/dPK8pbA1D+X8fXHGM5xAiD0otzR/KtZHKXlV6sGppRrFoFgm4tZi8RT0zIIfWgFHMAfM+nDu8WcpjetUwvzF3/ewLvxrf+/ycISHRmwSNec168WkgWpRaakse7QWgsv9BqsbE2PJCckbQReY+L9T6L6tEZ82fEAQA+/DgF135+YIr7enh7umD9Pxsv+vn5vJiiMjYO4QBhCTMEwB2uFXgJoilSrQUBLzHU1Zq6f4+MMZz39f1x9LF0QeNZYCEJD3nxhTaWQ6rUxhcMKUFvAGu5+ucsSEaxahildBrX8s/Z/u1JXP/lN0yLj0Erdye+1ZsVQy0jv7AUX+w4imv/vm/UBgEC+fjknI8zivKuUiCIj/Gaykrcv3wVJzduhrbiKVb+dQI8W/E6T/PaocovwaJV34CVKxAzewY6hIVCYfPKjTWFka7e7lztc0rq6YW5A/mKAQAKGxt06t0Tk79YD1Zuga07j/M10eRcuvqiu9c3DtmyMxWsXIF3t21BQN8+xsQAAF7dAqcuixIywpxXWyt7O8TMnI7dSz9CTl4RfLwbb2B/VVLny4Qx0RgzMgrVNVq8MzsZlVWNz90YSur3s/MRFlybRxrmkJzcAly5fg9jly+FtQPn5RC9W2QNwUkQQtHH3A1D7XuEAgAeZKv0CsI1qfPBUiHHzk3zTK7fMIfcz84HAHQIC+VjhteeVa7jEP2bc3lAIcj6TYuDAjf4lOcmCAH/fTwN+DUzCwDQzq/JjniYTcMc0s63Nvb7l7nvImVAMvn45CQIBYr4GG1IZVk5UtdtQFhwR7T2cjPHVJPSMIf4KN0Q0s0fJzdthprjkjRhdYd4+eRSKK0o7xIBeHWcAFBdUYF7mZeQun4DZDoNViycaPC1l09SlzEMPvvoHfj6eODWnRwsWvU1KMuvSzSU1P914BzGjTZ8Nqj2tXcnWLkFYmZOR/seobC0tdVblgLnoly9+/CJi5Mg6UV5qwF8wMcwULtARQhBcNf2eDdhCNzdzO75RMeYIED9gSGlFMvOntRbjlKSGOXmxWv+nluXxZCDfIy+TOK4/vjb3HEtQoyGGFoP8XBzwpJ5byJxXP9X1iegS7IKCrz4+OT02hvp5Hkuo0h11ZSz4dZWQp/rbzq0OhZl5Wq8PXst1Opq+Pp6YcTAYPQOr50NMfq7EbTXMJofsiiNCCVE8+rCtXAbhxDCZhTl/YUCx7iUN8SxU1cQE91d7zMxBobmkPu4CIWlzzAwdgRi4mLh7OaKW9dvYsunycjOKcTEMX25GaLori1+PBvAZ1yKc55cjHD1Tk0vylsLYDbXOg0pLasw+EyMgaE5bNh+FGMmxSMucULdZyE9w+EfuBHvj3sbdraWOJX2C+RyOVbHjUVgvz7oN3mS3gRPQZeeLyjY3Mvd3eiondcCldrFax4o4bUC1hIpKCrHbw/zMTr+zUbPHJwcEff2Wzhw5BImzJyOlNOH8enWdbCsqkLK/IVgdTp9Ju3lMs0oLr55CRJNiFbt6hlHgWQ+9VoCJaXP8I91+7HvcAYWfLQdPn4+YBj9R/FGjPsjtqceRO+YAbCzt0NrP18sWLkEzvZ2yDqk//tKKeK4xMF7CTeaEG2Uq/ccUDoIBM1+v5QQUEqxau1etAvugV2nDmPZxjX4Q+JEg+UJw+jdrTk4digeXLqs3wfH4wsmb3KIdFOeoJSGpZWqejEsRgHoDRAlQD0AmH7Kswm5dScH2787gwcPcqH09UH8jKkAgI4BndGR59G5anU1su/dx92LWTiy5nMMePdPUFhZ1T0nHC/MMWujHCGEBXD295860ovytNAjSk2NBvt+FPZiHRtrSwzpHwLA+C7HDm2V6BpQe5jowOEMHDh2GTMWz0f3yB6wtLYyWM8YOp0OW/93HUa9NRZhfaJwcNdepMxLQnzyZ5DJ6/7EnAbhYt3kUAWg0YGR+LGvHkiZC9ddjlodi+9PZGHp55+iU1deK6x6yf0tBxF9e0Lp6wOlrw8Cgrpi8fS5uHr4KEJjR9QV42JLrJMvZQBgY2+HsqeVIrkwneycfFjZ2AoiBlB72rh7VES9zwbFDsPDK/VmhX/hYkusFvIAgLJT3z7Yf+QnAICjvdGlziajoKgcOv2vp4JBWRaamhe7UijlNv0kiiAU+IUAvYbMmg4CggOpZ17etv9aoLBU4NaNm+jc9X8Et00pReqhI2gbXrvtiQClapma0zS8KLtA0wpVCYRQk89INAU3fzqNE+s34b35s9G9Z7ggZyQpy+JRdg5SNm/D/fvZSFy3BnKFAiA0KdJF+TEXGyIJkqMkRJYjln2hyLn5M05u3IxHt29DW2N47m9QXCzGT0nAvq92IS5hPKaOGo+BscMwdnI8po4aD63mRV1HdzcE9OuD6MmTnu9Iuagur+7L9YZT0f5g6YV5p0HAcQbuv5YcHauN6OXeJo9rBdHOF1OQL8Wy3UK4yFcMQERBFK6euwBwPpUa5Ohed3lYS4YApSA0qcSlog9fMX6vLx5pRbmTCcgWMX00NQQ4S4FCAN0BtALAAngE4BYoOaiWqQ9GO7ctNcO+eFBKmczix+cpaGTDZ/quz9N7WdjrRZkFa9E51N1dJZYD0d+C0p7kdCAy2WXU/pcRLRlKQcZFuXp9J6YT0W4lpZTeAeBvrNxTbQ1+Li8yePmkAK2GBehXAImH6bPQLCFkVqSLuGIATThOSC/K+wDA6qby9xxK6awoN+W6zGLVcJbSFPBsqQQoBTAlwtV7rzgRNvInLi+1lLsZxaqNQY7uqwHu17BW6bS4bloLYUHpnEg35efPP8jIz/eAXPchBSbDeO+gA/CNDPRvPVyVOaYEYApNPpJOL1KNBegWQJzrjX6nHBSTIt289+l7eL7gobdMZjGKUjqcAO1Qu3gkA1BIgRsMyGmWandFuflwmjIXkmaZ2sh4kuMf7Op9XcEw1iK8WZ1nZExCuJOn+SdDm4Fmm2uilJLM4ry3KcgSAH4CmMymhC6MdPb+Vqi7q5qDZp/8y6LUQlukepMymASKvuA3e6CjoGcAZpPCxfMA192BrzPNLsjLZBUUeGllmgGg6EUpOoGgA2qXgh0JUEqBMhA8AMhNgGYwcvZouENrs45KSEhISEhISEhISEhISEhISEhISEhISAjPfwDDSYNd3MiRjQAAAABJRU5ErkJggg==";
+
+            ui.initOAuth(oauthConfigObject);
+
+            // End Swagger UI call region
+
+            window.ui = ui;
+        }
+    </script>
+</body>
+</html>
