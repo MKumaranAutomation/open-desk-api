@@ -69,7 +69,7 @@
 - [x] BDD using `SpecFlow`, `InMemory Testing`, Report Generation using `Pickle`, Code Coverage using `Coverlet`
 - [x] Deploy [Resharper Code Analysis report](https://open-desk-renalysis.azurewebsites.net) & [Living Documentation](https://open-desk-docs.azurewebsites.net/) online
 - [ ] Health Checks
-- [ ] MiniProfiler
+- [x] MiniProfiler
 - [ ] Create Docker image on every build (CI)
 
 ---
