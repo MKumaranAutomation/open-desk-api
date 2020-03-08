@@ -12,6 +12,7 @@ Task("SonarStart")
       Url = SonarUrl,
       Organization = SonarOrganization,
       Verbose = true,
+      Exclusions = SonarExclusions,
       ArgumentCustomization = args =>
       {
          foreach (var argument in SonarArguments)

@@ -10,6 +10,7 @@ const string SonarProjectKey = "spicycoder_open-desk-api";
 const string SonarOrganization = "spicycoder";
 const string SonarToken = "b0f2b05ab57b4c765f010b0601adcb21118c6892";
 const string SonarUrl = "https://sonarcloud.io";
+const string SonarExclusions = "**/*.css,**/*.html";
 const string AnalysisDirectory = "./analysis";
 private readonly static string CoverageFile = $"{TestResultsDirectory}/results.opencover.xml";
 private readonly static string CodeCovToken = "e108d274-1e3e-4aaf-8eb4-1937ba1f12c5";
