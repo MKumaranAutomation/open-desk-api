@@ -11,16 +11,25 @@ Task("CleanArtifacts")
       {
          Configuration = configuration
       });
-      
-   if (DirectoryExists(ArtifactsDirectory))
+
+   Action<string> deleteDirectory = d =>
    {
-      DeleteDirectory(
-         ArtifactsDirectory,
-         new DeleteDirectorySettings
-         {
-            Force = true,
-            Recursive = true
-         });
+      if (DirectoryExists(d))
+      {
+         DeleteDirectory(
+            d,
+            new DeleteDirectorySettings
+            {
+               Force = true,
+               Recursive = true
+            });
+      }
+   };
+
+   var directories = new [] { ArtifactsDirectory, TestResultsDirectory };
+   foreach (var d in directories)
+   {
+       deleteDirectory(d);
    }
 });
 Task("Restore")
@@ -48,14 +57,17 @@ Task("Test")
       NoRestore = true,
       Logger = $"trx;LogFileName={TestResult}"
    };
+
    var coverletSettings = new CoverletSettings
    {
       CollectCoverage = true,
-      CoverletOutputFormat = CoverletOutputFormat.opencover | CoverletOutputFormat.cobertura,
+      CoverletOutputFormat = CoverletOutputFormat.opencover | CoverletOutputFormat.cobertura | CoverletOutputFormat.json,
       CoverletOutputDirectory = TestResultsDirectory,
       CoverletOutputName = TestResultsFile,
+      MergeWithFile = $"{TestResultsDirectory}/{TestResultsFile}.json",
       OutputTransformer = (f, d) => $@"{d}/{f}"
    };
+
    DotNetCoreTest(
       SolutionName,
       testSettings,
