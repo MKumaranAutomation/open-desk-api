@@ -12,7 +12,8 @@ namespace Api.Http
     using System.IO;
     using System.Linq;
     using System.Net.Mime;
-
+    using Swashbuckle.AspNetCore.Filters;
+    
     /// <summary>
     /// Defines the <see cref="Startup" />
     /// </summary>
@@ -46,6 +47,7 @@ namespace Api.Http
 
             var swaggerConfig = Configuration.GetSection("SwaggerConfiguration");
 
+            services.AddSwaggerExamplesFromAssemblyOf<Startup>();
             services.AddSwaggerGen(swagger =>
             {
                 swagger.SwaggerDoc(
@@ -62,6 +64,8 @@ namespace Api.Http
                             Url = new Uri(swaggerConfig["ContactUrl"])
                         }
                     });
+
+                swagger.ExampleFilters();
 
                 Directory.GetFiles(
                         AppContext.BaseDirectory,
